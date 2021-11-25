@@ -12,10 +12,20 @@ type RTPReader interface {
 	ReadRTP(pkt *rtp.Packet) (int, error)
 }
 
+type RTPReadCloser interface {
+	RTPReader
+	io.Closer
+}
+
 // RTCPReader is used by Interceptor.BindRTCPReader.
 type RTCPReader interface {
 	// Read a batch of rtcp packets. This returns the number of packets read, not the number of bytes!
 	ReadRTCP([]rtcp.Packet) (int, error)
+}
+
+type RTCPReadCloser interface {
+	RTCPReader
+	io.Closer
 }
 
 // RawRTPReader is a RTPReader that reads from an `io.Reader`.
@@ -79,17 +89,4 @@ func (r *RawRTCPReader) ReadRTCP(pkts []rtcp.Packet) (int, error) {
 // NewRTCPReader creates a new RTCP packet reader.
 func NewRTCPReader(r io.Reader, mtu int) RTCPReader {
 	return &RawRTCPReader{src: r, mtu: mtu}
-}
-
-// ConsumeRTCP reads all the data from an RTCPReader.
-func ConsumeRTCP(r RTCPReader) {
-	if r == nil {
-		return
-	}
-	var pkts []rtcp.Packet
-	for {
-		if _, err := r.ReadRTCP(pkts); err != nil {
-			return
-		}
-	}
 }

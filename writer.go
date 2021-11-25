@@ -12,9 +12,19 @@ type RTPWriter interface {
 	WriteRTP(pkt *rtp.Packet) (int, error)
 }
 
+type RTPWriteCloser interface {
+	RTPWriter
+	io.Closer
+}
+
 // RTCPWriter is used by Interceptor.BindRTCPWriter.
 type RTCPWriter interface {
 	WriteRTCP(pkts []rtcp.Packet) (int, error)
+}
+
+type RTCPWriteCloser interface {
+	RTCPWriter
+	io.Closer
 }
 
 // RawRTPWriter is a RTP packet writer that writes to an io.Writer`.`
