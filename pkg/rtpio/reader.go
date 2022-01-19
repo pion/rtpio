@@ -12,10 +12,18 @@ type RTPReader interface {
 	ReadRTP() (*rtp.Packet, error)
 }
 
+type RTPWriterTo interface {
+	WriteRTPTo(w RTPWriter) error
+}
+
 // RTCPReader is used by Interceptor.BindRTCPReader.
 type RTCPReader interface {
 	// Read a batch of rtcp packets. This returns the number of packets read, not the number of bytes!
 	ReadRTCP() ([]rtcp.Packet, error)
+}
+
+type RTCPWriterTo interface {
+	WriteRTCPTo(w RTCPWriter) error
 }
 
 // RawRTPReader is a RTPReader that reads from an `io.Reader`.

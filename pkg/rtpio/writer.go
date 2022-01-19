@@ -12,9 +12,17 @@ type RTPWriter interface {
 	WriteRTP(pkt *rtp.Packet) error
 }
 
+type RTPReaderFrom interface {
+	ReadRTPFrom(r RTPReader) error
+}
+
 // RTCPWriter is used by Interceptor.BindRTCPWriter.
 type RTCPWriter interface {
 	WriteRTCP(pkts []rtcp.Packet) error
+}
+
+type RTCPReaderFrom interface {
+	ReadFrom(r RTCPReader) error
 }
 
 // RawRTPWriter is a RTP packet writer that writes to an io.Writer`.`
@@ -58,5 +66,37 @@ func (w *RawRTCPWriter) WriteRTCP(pkts []rtcp.Packet) error {
 func NewRTCPWriter(w io.Writer) RTCPWriter {
 	return &RawRTCPWriter{
 		dst: w,
+	}
+}
+
+var DiscardRTP = discardRTPWriter{}
+
+type discardRTPWriter struct{}
+
+func (w discardRTPWriter) WriteRTP(pkt *rtp.Packet) error {
+	return nil
+}
+
+func (w discardRTPWriter) ReadRTPFrom(r RTPReader) error {
+	for {
+		if _, err := r.ReadRTP(); err != nil {
+			return err
+		}
+	}
+}
+
+var DiscardRTCP = discardRTCPWriter{}
+
+type discardRTCPWriter struct{}
+
+func (w discardRTCPWriter) WriteRTCP(pkts []rtcp.Packet) error {
+	return nil
+}
+
+func (w discardRTCPWriter) ReadRTCPFrom(r RTCPReader) error {
+	for {
+		if _, err := r.ReadRTCP(); err != nil {
+			return err
+		}
 	}
 }
