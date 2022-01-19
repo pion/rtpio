@@ -9,13 +9,13 @@ import (
 
 // RTPReader is used by Interceptor.BindRemoteStream.
 type RTPReader interface {
-	ReadRTP(pkt *rtp.Packet) (int, error)
+	ReadRTP() (*rtp.Packet, error)
 }
 
 // RTCPReader is used by Interceptor.BindRTCPReader.
 type RTCPReader interface {
 	// Read a batch of rtcp packets. This returns the number of packets read, not the number of bytes!
-	ReadRTCP([]rtcp.Packet) (int, error)
+	ReadRTCP() ([]rtcp.Packet, error)
 }
 
 // RawRTPReader is a RTPReader that reads from an `io.Reader`.
@@ -25,16 +25,17 @@ type RawRTPReader struct {
 }
 
 // ReadRTP reads a single RTP packet from the underlying reader.
-func (r *RawRTPReader) ReadRTP(pkt *rtp.Packet) (int, error) {
+func (r *RawRTPReader) ReadRTP() (*rtp.Packet, error) {
 	buf := make([]byte, r.mtu)
 	n, err := r.src.Read(buf)
 	if err != nil {
-		return 0, err
+		return nil, err
 	}
+	pkt := &rtp.Packet{}
 	if err := pkt.Unmarshal(buf[:n]); err != nil {
-		return 0, err
+		return nil, err
 	}
-	return n, nil
+	return pkt, nil
 }
 
 // NewRTPReader creates a new RTP packet reader.
@@ -44,36 +45,19 @@ func NewRTPReader(r io.Reader, mtu int) RTPReader {
 
 // RawRTCPReader is a RTCPReader that reads from an `io.Reader`.
 type RawRTCPReader struct {
-	src     io.Reader
-	mtu     int
-	backlog []rtcp.Packet
+	src io.Reader
+	mtu int
 }
 
 // ReadRTCP reads a batch of RTCP packets from the underlying reader.
-func (r *RawRTCPReader) ReadRTCP(pkts []rtcp.Packet) (int, error) {
+func (r *RawRTCPReader) ReadRTCP() ([]rtcp.Packet, error) {
 	// read from backlog first.
-	if len(r.backlog) > 0 {
-		n := copy(pkts, r.backlog)
-		r.backlog = r.backlog[n:]
-		return n, nil
-	}
 	buf := make([]byte, r.mtu)
 	n, err := r.src.Read(buf)
 	if err != nil {
-		return 0, err
+		return nil, err
 	}
-	p, err := rtcp.Unmarshal(buf[:n])
-	if err != nil {
-		return 0, err
-	}
-	ct := copy(pkts, p)
-
-	if ct < len(p) {
-		// we didn't fill up all the packets so mark some of them as backlogged for
-		// the next read.
-		r.backlog = append(r.backlog, p[ct:]...)
-	}
-	return ct, nil
+	return rtcp.Unmarshal(buf[:n])
 }
 
 // NewRTCPReader creates a new RTCP packet reader.

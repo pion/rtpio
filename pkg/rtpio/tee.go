@@ -10,12 +10,15 @@ type teeRTPReader struct {
 	w RTPWriter
 }
 
-func (r *teeRTPReader) ReadRTP(pkt *rtp.Packet) (int, error) {
-	n, err := r.r.ReadRTP(pkt)
+func (r *teeRTPReader) ReadRTP() (*rtp.Packet, error) {
+	pkt, err := r.r.ReadRTP()
 	if err != nil {
-		return n, err
+		return nil, err
 	}
-	return r.w.WriteRTP(pkt)
+	if err := r.w.WriteRTP(pkt); err != nil {
+		return nil, err
+	}
+	return pkt, nil
 }
 
 func TeeRTPReader(r RTPReader, w RTPWriter) RTPReader {
@@ -27,12 +30,15 @@ type teeRTCPReader struct {
 	w RTCPWriter
 }
 
-func (r *teeRTCPReader) ReadRTCP(pkts []rtcp.Packet) (int, error) {
-	n, err := r.r.ReadRTCP(pkts)
+func (r *teeRTCPReader) ReadRTCP() ([]rtcp.Packet, error) {
+	pkts, err := r.r.ReadRTCP()
 	if err != nil {
-		return n, err
+		return nil, err
 	}
-	return r.w.WriteRTCP(pkts)
+	if err := r.w.WriteRTCP(pkts); err != nil {
+		return nil, err
+	}
+	return pkts, nil
 }
 
 func TeeRTCPReader(r RTCPReader, w RTCPWriter) RTCPReader {

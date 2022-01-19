@@ -12,8 +12,8 @@ type pipeRTPReader struct {
 	rtpReader RTPReader
 }
 
-func (r *pipeRTPReader) ReadRTP(pkt *rtp.Packet) (int, error) {
-	return r.rtpReader.ReadRTP(pkt)
+func (r *pipeRTPReader) ReadRTP() (*rtp.Packet, error) {
+	return r.rtpReader.ReadRTP()
 }
 
 func (r *pipeRTPReader) Close() error {
@@ -25,7 +25,7 @@ type pipeRTPWriter struct {
 	rtpWriter RTPWriter
 }
 
-func (w *pipeRTPWriter) WriteRTP(pkt *rtp.Packet) (int, error) {
+func (w *pipeRTPWriter) WriteRTP(pkt *rtp.Packet) error {
 	return w.rtpWriter.WriteRTP(pkt)
 }
 
@@ -38,8 +38,8 @@ type pipeRTCPReader struct {
 	rtcpReader RTCPReader
 }
 
-func (r *pipeRTCPReader) ReadRTCP(pkts []rtcp.Packet) (int, error) {
-	return r.rtcpReader.ReadRTCP(pkts)
+func (r *pipeRTCPReader) ReadRTCP() ([]rtcp.Packet, error) {
+	return r.rtcpReader.ReadRTCP()
 }
 
 func (r *pipeRTCPReader) Close() error {
@@ -51,7 +51,7 @@ type pipeRTCPWriter struct {
 	rtcpWriter RTCPWriter
 }
 
-func (w *pipeRTCPWriter) WriteRTCP(pkts []rtcp.Packet) (int, error) {
+func (w *pipeRTCPWriter) WriteRTCP(pkts []rtcp.Packet) error {
 	return w.rtcpWriter.WriteRTCP(pkts)
 }
 

@@ -9,12 +9,12 @@ import (
 
 // RTPWriter is used by Interceptor.BindLocalStream.
 type RTPWriter interface {
-	WriteRTP(pkt *rtp.Packet) (int, error)
+	WriteRTP(pkt *rtp.Packet) error
 }
 
 // RTCPWriter is used by Interceptor.BindRTCPWriter.
 type RTCPWriter interface {
-	WriteRTCP(pkts []rtcp.Packet) (int, error)
+	WriteRTCP(pkts []rtcp.Packet) error
 }
 
 // RawRTPWriter is a RTP packet writer that writes to an io.Writer`.`
@@ -23,12 +23,13 @@ type RawRTPWriter struct {
 }
 
 // WriteRTP writes a RTP packet to the underlying writer.
-func (w *RawRTPWriter) WriteRTP(pkt *rtp.Packet) (int, error) {
+func (w *RawRTPWriter) WriteRTP(pkt *rtp.Packet) error {
 	b, err := pkt.Marshal()
 	if err != nil {
-		return 0, err
+		return err
 	}
-	return w.dst.Write(b)
+	_, err = w.dst.Write(b)
+	return err
 }
 
 // NewRTPWriter creates a new RTP packet writer.
@@ -44,12 +45,13 @@ type RawRTCPWriter struct {
 }
 
 // WriteRTCP writes a slice of RTCP packets to the underlying writer.
-func (w *RawRTCPWriter) WriteRTCP(pkts []rtcp.Packet) (int, error) {
+func (w *RawRTCPWriter) WriteRTCP(pkts []rtcp.Packet) error {
 	b, err := rtcp.Marshal(pkts)
 	if err != nil {
-		return 0, err
+		return err
 	}
-	return w.dst.Write(b)
+	_, err = w.dst.Write(b)
+	return err
 }
 
 // NewRTCPWriter creates a new RTCP packet writer.
