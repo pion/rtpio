@@ -25,6 +25,8 @@ func TeeRTPReader(r RTPReader, w RTPWriter) RTPReader {
 	return &teeRTPReader{r: r, w: w}
 }
 
+var _ RTPReader = (*teeRTPReader)(nil)
+
 type teeRTCPReader struct {
 	r RTCPReader
 	w RTCPWriter
@@ -44,3 +46,5 @@ func (r *teeRTCPReader) ReadRTCP() ([]rtcp.Packet, error) {
 func TeeRTCPReader(r RTCPReader, w RTCPWriter) RTCPReader {
 	return &teeRTCPReader{r: r, w: w}
 }
+
+var _ RTCPReader = (*teeRTCPReader)(nil)

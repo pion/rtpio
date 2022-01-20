@@ -22,7 +22,7 @@ type RTCPWriter interface {
 }
 
 type RTCPReaderFrom interface {
-	ReadFrom(r RTCPReader) error
+	ReadRTCPFrom(r RTCPReader) error
 }
 
 // RawRTPWriter is a RTP packet writer that writes to an io.Writer`.`
@@ -47,6 +47,8 @@ func NewRTPWriter(w io.Writer) RTPWriter {
 	}
 }
 
+var _ RTPWriter = (*RawRTPWriter)(nil)
+
 // RawRTCPWriter is a writer that writes RTCP packets to an `io.Writer``.
 type RawRTCPWriter struct {
 	dst io.Writer
@@ -69,6 +71,8 @@ func NewRTCPWriter(w io.Writer) RTCPWriter {
 	}
 }
 
+var _ RTCPWriter = (*RawRTCPWriter)(nil)
+
 var DiscardRTP = discardRTPWriter{}
 
 type discardRTPWriter struct{}
@@ -85,6 +89,9 @@ func (w discardRTPWriter) ReadRTPFrom(r RTPReader) error {
 	}
 }
 
+var _ RTPWriter = DiscardRTP
+var _ RTPReaderFrom = DiscardRTP
+
 var DiscardRTCP = discardRTCPWriter{}
 
 type discardRTCPWriter struct{}
@@ -100,3 +107,6 @@ func (w discardRTCPWriter) ReadRTCPFrom(r RTCPReader) error {
 		}
 	}
 }
+
+var _ RTCPWriter = DiscardRTCP
+var _ RTCPReaderFrom = DiscardRTCP

@@ -20,6 +20,9 @@ func (r *pipeRTPReader) Close() error {
 	return r.closer.Close()
 }
 
+var _ RTPReader = (*pipeRTPReader)(nil)
+var _ io.Closer = (*pipeRTPReader)(nil)
+
 type pipeRTPWriter struct {
 	closer    io.Closer
 	rtpWriter RTPWriter
@@ -32,6 +35,9 @@ func (w *pipeRTPWriter) WriteRTP(pkt *rtp.Packet) error {
 func (w *pipeRTPWriter) Close() error {
 	return w.closer.Close()
 }
+
+var _ RTPWriter = (*pipeRTPWriter)(nil)
+var _ io.Closer = (*pipeRTPWriter)(nil)
 
 type pipeRTCPReader struct {
 	closer     io.Closer
@@ -46,6 +52,9 @@ func (r *pipeRTCPReader) Close() error {
 	return r.closer.Close()
 }
 
+var _ RTCPReader = (*pipeRTCPReader)(nil)
+var _ io.Closer = (*pipeRTCPReader)(nil)
+
 type pipeRTCPWriter struct {
 	closer     io.Closer
 	rtcpWriter RTCPWriter
@@ -58,6 +67,9 @@ func (w *pipeRTCPWriter) WriteRTCP(pkts []rtcp.Packet) error {
 func (w *pipeRTCPWriter) Close() error {
 	return w.closer.Close()
 }
+
+var _ RTCPWriter = (*pipeRTCPWriter)(nil)
+var _ io.Closer = (*pipeRTCPWriter)(nil)
 
 // RTPPipe creates a new RTPPipe and returns the reader and writer.
 func RTPPipe() (RTPReadCloser, RTPWriteCloser) {

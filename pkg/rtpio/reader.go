@@ -51,6 +51,8 @@ func NewRTPReader(r io.Reader, mtu int) RTPReader {
 	return &RawRTPReader{src: r, mtu: mtu}
 }
 
+var _ RTPReader = (*RawRTPReader)(nil)
+
 // RawRTCPReader is a RTCPReader that reads from an `io.Reader`.
 type RawRTCPReader struct {
 	src io.Reader
@@ -72,3 +74,5 @@ func (r *RawRTCPReader) ReadRTCP() ([]rtcp.Packet, error) {
 func NewRTCPReader(r io.Reader, mtu int) RTCPReader {
 	return &RawRTCPReader{src: r, mtu: mtu}
 }
+
+var _ RTCPReader = (*RawRTCPReader)(nil)
