@@ -1,4 +1,4 @@
-module github.com/muxable/rtpio
+module github.com/pion/rtpio
 
 go 1.17
 
