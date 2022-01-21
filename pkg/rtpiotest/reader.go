@@ -3,7 +3,7 @@ package rtpiotest
 import (
 	"testing/iotest"
 
-	"github.com/muxable/rtpio/pkg/rtpio"
+	"github.com/pion/rtpio/pkg/rtpio"
 )
 
 func DataErrRTPReader(r rtpio.RTPReader) rtpio.RTPReader {

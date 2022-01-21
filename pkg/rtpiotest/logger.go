@@ -3,9 +3,9 @@ package rtpiotest
 import (
 	"log"
 
-	"github.com/muxable/rtpio/pkg/rtpio"
 	"github.com/pion/rtcp"
 	"github.com/pion/rtp"
+	"github.com/pion/rtpio/pkg/rtpio"
 )
 
 type writeRTPLogger struct {
