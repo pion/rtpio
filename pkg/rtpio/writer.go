@@ -110,3 +110,43 @@ func (w discardRTCPWriter) ReadRTCPFrom(r RTCPReader) error {
 
 var _ RTCPWriter = DiscardRTCP
 var _ RTCPReaderFrom = DiscardRTCP
+
+type unmarshallingRTPWriter struct {
+	RTPWriter
+}
+
+// Write unmarshals the RTP packets from RTPWriter.
+func (w *unmarshallingRTPWriter) Write(buf []byte) (int, error) {
+	p := &rtp.Packet{}
+	if err := p.Unmarshal(buf); err != nil {
+		return 0, err
+	}
+	return len(buf), w.WriteRTP(p)
+}
+
+// NewUnmarshallingRTPWriter creates an io.Writer that Writes RTP packets from an RTPWriter.
+func NewUnmarshallingRTPWriter(r RTPWriter) io.Writer {
+	return &unmarshallingRTPWriter{RTPWriter: r}
+}
+
+var _ io.Writer = (*unmarshallingRTPWriter)(nil)
+
+type unmarshallingRTCPWriter struct {
+	RTCPWriter
+}
+
+// Write unmarshals the RTCP packets from RTCPWriter
+func (w *unmarshallingRTCPWriter) Write(buf []byte) (int, error) {
+	pkts, err := rtcp.Unmarshal(buf)
+	if err != nil {
+		return 0, err
+	}
+	return len(buf), w.WriteRTCP(pkts)
+}
+
+// NewUnmarhsallingRTCPWriter creates an io.Writer that Writes RTCP packets from an RTCPWriter.
+func NewUnmarshallingRTCPWriter(r RTCPWriter) io.Writer {
+	return &unmarshallingRTCPWriter{RTCPWriter: r}
+}
+
+var _ io.Writer = (*unmarshallingRTCPWriter)(nil)
