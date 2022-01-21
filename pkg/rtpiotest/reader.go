@@ -18,14 +18,6 @@ func HalfRTPReader(r rtpio.RTPReader) rtpio.RTPReader {
 	return rtpio.NewRTPReader(iotest.HalfReader(rtpio.NewUnmarshallingRTPReader(r)), 1500)
 }
 
-func NewRTPReadLogger(prefix string, r rtpio.RTPReader) rtpio.RTPReader {
-	return rtpio.NewRTPReader(iotest.NewReadLogger(prefix, rtpio.NewUnmarshallingRTPReader(r)), 1500)
-}
-
-func NewRTPWriteLogger(prefix string, r rtpio.RTPWriter) rtpio.RTPWriter {
-	return rtpio.NewRTPWriter(iotest.NewWriteLogger(prefix, rtpio.NewUnmarshallingRTPWriter(r)))
-}
-
 func TimeoutRTPReader(r rtpio.RTPReader) rtpio.RTPReader {
 	return rtpio.NewRTPReader(iotest.TimeoutReader(rtpio.NewUnmarshallingRTPReader(r)), 1500)
 }
@@ -40,14 +32,6 @@ func ErrRTCPReader(err error) rtpio.RTCPReader {
 
 func HalfRTCPReader(r rtpio.RTCPReader) rtpio.RTCPReader {
 	return rtpio.NewRTCPReader(iotest.HalfReader(rtpio.NewUnmarshallingRTCPReader(r)), 1500)
-}
-
-func NewRTCPReadLogger(prefix string, r rtpio.RTCPReader) rtpio.RTCPReader {
-	return rtpio.NewRTCPReader(iotest.NewReadLogger(prefix, rtpio.NewUnmarshallingRTCPReader(r)), 1500)
-}
-
-func NewRTCPWriteLogger(prefix string, r rtpio.RTCPWriter) rtpio.RTCPWriter {
-	return rtpio.NewRTCPWriter(iotest.NewWriteLogger(prefix, rtpio.NewUnmarshallingRTCPWriter(r)))
 }
 
 func TimeoutRTCPReader(r rtpio.RTCPReader) rtpio.RTCPReader {
