@@ -16,9 +16,9 @@ type writeRTPLogger struct {
 func (l *writeRTPLogger) WriteRTP(p *rtp.Packet) (err error) {
 	err = l.w.WriteRTP(p)
 	if err != nil {
-		log.Printf("%s %x: %v", l.prefix, p, err)
+		log.Printf("%s (err: %v) %v", l.prefix, err, p)
 	} else {
-		log.Printf("%s %x", l.prefix, p)
+		log.Printf("%s %v", l.prefix, p)
 	}
 	return
 }
@@ -38,9 +38,9 @@ type readRTPLogger struct {
 func (l *readRTPLogger) ReadRTP() (p *rtp.Packet, err error) {
 	p, err = l.r.ReadRTP()
 	if err != nil {
-		log.Printf("%s %x: %v", l.prefix, p, err)
+		log.Printf("%s (err: %v) %v", l.prefix, err, p)
 	} else {
-		log.Printf("%s %x", l.prefix, p)
+		log.Printf("%s %v", l.prefix, p)
 	}
 	return
 }
@@ -60,9 +60,9 @@ type writeRTCPLogger struct {
 func (l *writeRTCPLogger) WriteRTCP(p []rtcp.Packet) (err error) {
 	err = l.w.WriteRTCP(p)
 	if err != nil {
-		log.Printf("%s %x: %v", l.prefix, p, err)
+		log.Printf("%s (err: %v) %v", l.prefix, err, p)
 	} else {
-		log.Printf("%s %x", l.prefix, p)
+		log.Printf("%s %v", l.prefix, p)
 	}
 	return
 }
@@ -82,7 +82,7 @@ type readRTCPLogger struct {
 func (l *readRTCPLogger) ReadRTCP() (p []rtcp.Packet, err error) {
 	p, err = l.r.ReadRTCP()
 	if err != nil {
-		log.Printf("%s %x: %v", l.prefix, p, err)
+		log.Printf("%s (err: %v) %v", l.prefix, err, p)
 	} else {
 		log.Printf("%s %x", l.prefix, p)
 	}
