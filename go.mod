@@ -1,6 +1,6 @@
 module github.com/pion/rtpio
 
-go 1.17
+go 1.19
 
 require (
 	github.com/pion/rtcp v1.2.9
