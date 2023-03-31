@@ -4,7 +4,6 @@ go 1.17
 
 require (
 	github.com/pion/rtcp v1.2.10
-	github.com/pion/rtp v1.7.13
 	github.com/pion/rtp/v2 v2.0.0
 )
 
