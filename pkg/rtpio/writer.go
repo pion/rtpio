@@ -4,7 +4,7 @@ import (
 	"io"
 
 	"github.com/pion/rtcp"
-	"github.com/pion/rtp"
+	"github.com/pion/rtp/v2"
 )
 
 // RTPWriter is used by Interceptor.BindLocalStream.
@@ -49,7 +49,7 @@ func NewRTPWriter(w io.Writer) RTPWriter {
 
 var _ RTPWriter = (*RawRTPWriter)(nil)
 
-// RawRTCPWriter is a writer that writes RTCP packets to an `io.Writer``.
+// RawRTCPWriter is a writer that writes RTCP packets to an `io.Writer“.
 type RawRTCPWriter struct {
 	dst io.Writer
 }
@@ -89,8 +89,10 @@ func (w discardRTPWriter) ReadRTPFrom(r RTPReader) error {
 	}
 }
 
-var _ RTPWriter = DiscardRTP
-var _ RTPReaderFrom = DiscardRTP
+var (
+	_ RTPWriter     = DiscardRTP
+	_ RTPReaderFrom = DiscardRTP
+)
 
 var DiscardRTCP = discardRTCPWriter{}
 
@@ -108,8 +110,10 @@ func (w discardRTCPWriter) ReadRTCPFrom(r RTCPReader) error {
 	}
 }
 
-var _ RTCPWriter = DiscardRTCP
-var _ RTCPReaderFrom = DiscardRTCP
+var (
+	_ RTCPWriter     = DiscardRTCP
+	_ RTCPReaderFrom = DiscardRTCP
+)
 
 type unmarshallingRTPWriter struct {
 	RTPWriter

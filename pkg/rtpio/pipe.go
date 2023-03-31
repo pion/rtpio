@@ -4,7 +4,7 @@ import (
 	"io"
 
 	"github.com/pion/rtcp"
-	"github.com/pion/rtp"
+	"github.com/pion/rtp/v2"
 )
 
 type pipeRTPReader struct {
@@ -20,8 +20,10 @@ func (r *pipeRTPReader) Close() error {
 	return r.closer.Close()
 }
 
-var _ RTPReader = (*pipeRTPReader)(nil)
-var _ io.Closer = (*pipeRTPReader)(nil)
+var (
+	_ RTPReader = (*pipeRTPReader)(nil)
+	_ io.Closer = (*pipeRTPReader)(nil)
+)
 
 type pipeRTPWriter struct {
 	closer    io.Closer
@@ -36,8 +38,10 @@ func (w *pipeRTPWriter) Close() error {
 	return w.closer.Close()
 }
 
-var _ RTPWriter = (*pipeRTPWriter)(nil)
-var _ io.Closer = (*pipeRTPWriter)(nil)
+var (
+	_ RTPWriter = (*pipeRTPWriter)(nil)
+	_ io.Closer = (*pipeRTPWriter)(nil)
+)
 
 type pipeRTCPReader struct {
 	closer     io.Closer
@@ -52,8 +56,10 @@ func (r *pipeRTCPReader) Close() error {
 	return r.closer.Close()
 }
 
-var _ RTCPReader = (*pipeRTCPReader)(nil)
-var _ io.Closer = (*pipeRTCPReader)(nil)
+var (
+	_ RTCPReader = (*pipeRTCPReader)(nil)
+	_ io.Closer  = (*pipeRTCPReader)(nil)
+)
 
 type pipeRTCPWriter struct {
 	closer     io.Closer
@@ -68,8 +74,10 @@ func (w *pipeRTCPWriter) Close() error {
 	return w.closer.Close()
 }
 
-var _ RTCPWriter = (*pipeRTCPWriter)(nil)
-var _ io.Closer = (*pipeRTCPWriter)(nil)
+var (
+	_ RTCPWriter = (*pipeRTCPWriter)(nil)
+	_ io.Closer  = (*pipeRTCPWriter)(nil)
+)
 
 // RTPPipe creates a new RTPPipe and returns the reader and writer.
 func RTPPipe() (RTPReadCloser, RTPWriteCloser) {

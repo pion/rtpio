@@ -4,7 +4,7 @@ import (
 	"io"
 
 	"github.com/pion/rtcp"
-	"github.com/pion/rtp"
+	"github.com/pion/rtp/v2"
 )
 
 // RTPReader is used by Interceptor.BindRemoteStream.
