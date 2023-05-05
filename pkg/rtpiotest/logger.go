@@ -1,6 +1,7 @@
 // SPDX-FileCopyrightText: 2023 The Pion community <https://pion.ly>
 // SPDX-License-Identifier: MIT
 
+// Package rtpiotest provides helpers for testing the rtpio package
 package rtpiotest
 
 import (
@@ -19,9 +20,9 @@ type writeRTPLogger struct {
 func (l *writeRTPLogger) WriteRTP(p *rtp.Packet) (err error) {
 	err = l.w.WriteRTP(p)
 	if err != nil {
-		log.Printf("%s (err: %v) %v", l.prefix, err, p)
+		log.Printf("%s (err: %v) %v", l.prefix, err, p) //nolint:forbidigo
 	} else {
-		log.Printf("%s %v", l.prefix, p)
+		log.Printf("%s %v", l.prefix, p) //nolint:forbidigo
 	}
 	return
 }
@@ -41,9 +42,9 @@ type readRTPLogger struct {
 func (l *readRTPLogger) ReadRTP() (p *rtp.Packet, err error) {
 	p, err = l.r.ReadRTP()
 	if err != nil {
-		log.Printf("%s (err: %v) %v", l.prefix, err, p)
+		log.Printf("%s (err: %v) %v", l.prefix, err, p) //nolint:forbidigo
 	} else {
-		log.Printf("%s %v", l.prefix, p)
+		log.Printf("%s %v", l.prefix, p) //nolint:forbidigo
 	}
 	return
 }
@@ -63,9 +64,9 @@ type writeRTCPLogger struct {
 func (l *writeRTCPLogger) WriteRTCP(p []rtcp.Packet) (err error) {
 	err = l.w.WriteRTCP(p)
 	if err != nil {
-		log.Printf("%s (err: %v) %v", l.prefix, err, p)
+		log.Printf("%s (err: %v) %v", l.prefix, err, p) //nolint:forbidigo
 	} else {
-		log.Printf("%s %v", l.prefix, p)
+		log.Printf("%s %v", l.prefix, p) //nolint:forbidigo
 	}
 	return
 }
@@ -85,9 +86,9 @@ type readRTCPLogger struct {
 func (l *readRTCPLogger) ReadRTCP() (p []rtcp.Packet, err error) {
 	p, err = l.r.ReadRTCP()
 	if err != nil {
-		log.Printf("%s (err: %v) %v", l.prefix, err, p)
+		log.Printf("%s (err: %v) %v", l.prefix, err, p) //nolint:forbidigo
 	} else {
-		log.Printf("%s %x", l.prefix, p)
+		log.Printf("%s %x", l.prefix, p) //nolint:forbidigo
 	}
 	return
 }

@@ -15,6 +15,7 @@ type RTPReader interface {
 	ReadRTP() (*rtp.Packet, error)
 }
 
+// RTPWriterTo is ...
 type RTPWriterTo interface {
 	WriteRTPTo(w RTPWriter) error
 }
@@ -25,6 +26,7 @@ type RTCPReader interface {
 	ReadRTCP() ([]rtcp.Packet, error)
 }
 
+// RTCPWriterTo is ...
 type RTCPWriterTo interface {
 	WriteRTCPTo(w RTCPWriter) error
 }
@@ -50,7 +52,7 @@ func (r *rawRTPReader) ReadRTP() (*rtp.Packet, error) {
 }
 
 // NewRTPReader creates a new RTP packet reader.
-func NewRTPReader(r io.Reader, mtu int) *rawRTPReader {
+func NewRTPReader(r io.Reader, mtu int) RTPReader {
 	return &rawRTPReader{src: r, mtu: mtu}
 }
 
@@ -74,7 +76,7 @@ func (r *rawRTCPReader) ReadRTCP() ([]rtcp.Packet, error) {
 }
 
 // NewRTCPReader creates a new RTCP packet reader.
-func NewRTCPReader(r io.Reader, mtu int) *rawRTCPReader {
+func NewRTCPReader(r io.Reader, mtu int) RTCPReader {
 	return &rawRTCPReader{src: r, mtu: mtu}
 }
 
@@ -120,7 +122,7 @@ func (r *unmarshallingRTCPReader) Read(p []byte) (int, error) {
 	return copy(p, buf), nil
 }
 
-// NewUnmarhsallingRTCPReader creates an io.Reader that reads RTCP packets from an RTCPReader.
+// NewUnmarshallingRTCPReader creates an io.Reader that reads RTCP packets from an RTCPReader.
 func NewUnmarshallingRTCPReader(r RTCPReader) io.Reader {
 	return &unmarshallingRTCPReader{RTCPReader: r}
 }

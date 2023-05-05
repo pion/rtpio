@@ -3,6 +3,7 @@
 
 package rtpio
 
+// CopyRTP copies packets between a RTPReader and RTPWriter
 func CopyRTP(dst RTPWriter, src RTPReader) error {
 	for {
 		p, err := src.ReadRTP()
@@ -15,6 +16,7 @@ func CopyRTP(dst RTPWriter, src RTPReader) error {
 	}
 }
 
+// CopyRTCP copies packets between a RTCPReader and RTCPWriter
 func CopyRTCP(dst RTCPWriter, src RTCPReader) error {
 	for {
 		pkts, err := src.ReadRTCP()

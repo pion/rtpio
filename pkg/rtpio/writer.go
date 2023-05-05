@@ -15,6 +15,7 @@ type RTPWriter interface {
 	WriteRTP(pkt *rtp.Packet) error
 }
 
+// RTPReaderFrom is ...
 type RTPReaderFrom interface {
 	ReadRTPFrom(r RTPReader) error
 }
@@ -24,6 +25,7 @@ type RTCPWriter interface {
 	WriteRTCP(pkts []rtcp.Packet) error
 }
 
+// RTCPReaderFrom is used by Interceptor.BindRTCPReader.
 type RTCPReaderFrom interface {
 	ReadRTCPFrom(r RTCPReader) error
 }
@@ -76,14 +78,17 @@ func NewRTCPWriter(w io.Writer) RTCPWriter {
 
 var _ RTCPWriter = (*RawRTCPWriter)(nil)
 
-var DiscardRTP = discardRTPWriter{}
+// DiscardRTP is a writer which discards packets
+var DiscardRTP = discardRTPWriter{} //nolint:gochecknoglobals
 
 type discardRTPWriter struct{}
 
-func (w discardRTPWriter) WriteRTP(pkt *rtp.Packet) error {
+// WriteRTP ...
+func (w discardRTPWriter) WriteRTP(_ *rtp.Packet) error {
 	return nil
 }
 
+// ReadRTPFrom ...
 func (w discardRTPWriter) ReadRTPFrom(r RTPReader) error {
 	for {
 		if _, err := r.ReadRTP(); err != nil {
@@ -97,11 +102,12 @@ var (
 	_ RTPReaderFrom = DiscardRTP
 )
 
-var DiscardRTCP = discardRTCPWriter{}
+// DiscardRTCP is a writer which discards packets
+var DiscardRTCP = discardRTCPWriter{} //nolint:gochecknoglobals
 
 type discardRTCPWriter struct{}
 
-func (w discardRTCPWriter) WriteRTCP(pkts []rtcp.Packet) error {
+func (w discardRTCPWriter) WriteRTCP(_ []rtcp.Packet) error {
 	return nil
 }
 
@@ -151,7 +157,7 @@ func (w *unmarshallingRTCPWriter) Write(buf []byte) (int, error) {
 	return len(buf), w.WriteRTCP(pkts)
 }
 
-// NewUnmarhsallingRTCPWriter creates an io.Writer that Writes RTCP packets from an RTCPWriter.
+// NewUnmarshallingRTCPWriter creates an io.Writer that Writes RTCP packets from an RTCPWriter.
 func NewUnmarshallingRTCPWriter(r RTCPWriter) io.Writer {
 	return &unmarshallingRTCPWriter{RTCPWriter: r}
 }

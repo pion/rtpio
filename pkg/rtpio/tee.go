@@ -24,6 +24,7 @@ func (r *teeRTPReader) ReadRTP() (*rtp.Packet, error) {
 	return pkt, nil
 }
 
+// TeeRTPReader returns a RTPReader which writes packets also to another writer
 func TeeRTPReader(r RTPReader, w RTPWriter) RTPReader {
 	return &teeRTPReader{r: r, w: w}
 }
@@ -46,6 +47,7 @@ func (r *teeRTCPReader) ReadRTCP() ([]rtcp.Packet, error) {
 	return pkts, nil
 }
 
+// TeeRTCPReader returns a RTCPReader which writes packets also to another writer
 func TeeRTCPReader(r RTCPReader, w RTCPWriter) RTCPReader {
 	return &teeRTCPReader{r: r, w: w}
 }
